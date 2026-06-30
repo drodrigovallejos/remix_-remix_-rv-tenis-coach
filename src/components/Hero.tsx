@@ -8,6 +8,12 @@ export default function Hero() {
       <div className="absolute inset-0 z-0 opacity-40">
         <div className="absolute inset-0 bg-gradient-to-r from-brand-blue via-transparent to-brand-blue z-10 mix-blend-multiply"></div>
         <video 
+          ref={(el) => {
+            if (el) {
+              el.muted = true;
+              el.play().catch(() => {});
+            }
+          }}
           autoPlay 
           loop 
           muted 

@@ -25,6 +25,12 @@ export default function About() {
           >
             <div className="aspect-[3/4] md:aspect-[4/5] overflow-hidden shadow-2xl relative z-10 grayscale-[50%] contrast-125 border-4 border-white">
               <video 
+                ref={(el) => {
+                  if (el) {
+                    el.muted = true;
+                    el.play().catch(() => {});
+                  }
+                }}
                 autoPlay 
                 loop 
                 muted 
