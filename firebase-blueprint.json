@@ -1,0 +1,24 @@
+{
+  "entities": {
+    "VideoBlog": {
+      "title": "Video Blog Entry",
+      "description": "An entry for the video blog from Instagram",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "summary": { "type": "string" },
+        "instagramUrl": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "createdAt": { "type": "number" },
+        "updatedAt": { "type": "number" }
+      },
+      "required": ["title", "summary", "instagramUrl", "imageUrl", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/videoBlogs/{blogId}": {
+      "schema": { "$ref": "#/entities/VideoBlog" },
+      "description": "Video blogs for the website"
+    }
+  }
+}
