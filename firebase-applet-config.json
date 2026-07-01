@@ -1,10 +1,10 @@
 {
-  "projectId": "magnetic-codex-xgbcx",
-  "appId": "1:274078364546:web:ea72090b9dcf373f7bd59b",
-  "apiKey": "AIzaSyCoVVun31D1l1tbKFuih0IAa2fQq9Oyio4",
-  "authDomain": "magnetic-codex-xgbcx.firebaseapp.com",
-  "firestoreDatabaseId": "remixed-firestore-database-id",
-  "storageBucket": "magnetic-codex-xgbcx.firebasestorage.app",
-  "messagingSenderId": "274078364546",
-  "measurementId": ""
+  "projectId": "ravtenis",
+  "appId": "1:166119754256:web:bf16fb1933fbf5b6f19895",
+  "apiKey": "AIzaSyAL1p9YER9WBQ3aq79-Cz1zMfVgmlxCBL0",
+  "authDomain": "ravtenis.firebaseapp.com",
+  "firestoreDatabaseId": "(default)",
+  "storageBucket": "ravtenis.firebasestorage.app",
+  "messagingSenderId": "166119754256",
+  "measurementId": "G-B6SPHWV92B"
 }
