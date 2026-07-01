@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, orderBy, onSnapshot, addDoc, updateDoc, deleteDoc, doc, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, User, db, auth } from '../lib/db';
+import { collection, query, orderBy, onSnapshot, addDoc, updateDoc, deleteDoc, doc, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, signInWithEmailAndPassword, User, db, auth } from '../lib/db';
 import { LogIn, LogOut, Plus, Trash2, Edit2, Check, X } from 'lucide-react';
 import Navbar from './Navbar';
 import Footer from './Footer';
@@ -21,6 +21,10 @@ export default function AdminVideoBlog() {
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
   
   const [formData, setFormData] = useState({
     title: '',
@@ -57,6 +61,24 @@ export default function AdminVideoBlog() {
       await signInWithPopup(auth, provider);
     } catch (error) {
       console.error('Error logging in:', error);
+    }
+  };
+
+  const handleEmailLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginError('');
+    setIsSubmitting(true);
+    try {
+      await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
+    } catch (error: any) {
+      console.error('Error logging in with email:', error);
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+        setLoginError('Correo o contraseña incorrectos. Verifica e intenta nuevamente.');
+      } else {
+        setLoginError('Error al iniciar sesión: ' + error.message);
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -142,12 +164,76 @@ export default function AdminVideoBlog() {
     return (
       <>
         <Navbar />
-        <div className="pt-32 pb-24 min-h-[70vh] bg-brand-dark flex flex-col items-center justify-center text-center px-4">
-          <h2 className="text-3xl font-black italic uppercase text-brand-accent mb-6">Acceso Restringido</h2>
-          <p className="text-blue-100 mb-8 max-w-md mx-auto">Para gestionar el contenido del blog necesitas verificar tu identidad como administrador.</p>
-          <button onClick={handleLogin} className="inline-flex items-center gap-2 px-6 py-3 border border-brand-accent text-brand-accent hover:bg-brand-accent hover:text-brand-dark transition-colors font-bold uppercase text-sm">
-            Verificar Identidad Google
-          </button>
+        <div className="pt-32 pb-24 min-h-[80vh] bg-brand-dark flex flex-col items-center justify-center px-4 relative overflow-hidden">
+          <div className="absolute inset-0 z-0 bg-[url('https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center opacity-5 mix-blend-overlay"></div>
+          
+          <div className="relative z-10 max-w-md w-full bg-white/5 border border-white/10 p-8 shadow-2xl backdrop-blur-md">
+            <div className="text-center mb-8">
+              <h2 className="text-brand-accent font-bold tracking-[0.2em] uppercase text-[10px] mb-2">Panel Administrativo</h2>
+              <h3 className="text-3xl font-black italic uppercase tracking-wider">Acceso Restringido</h3>
+              <div className="h-[2px] w-16 bg-brand-accent mx-auto mt-4"></div>
+            </div>
+
+            {loginError && (
+              <div className="bg-red-500/10 border border-red-500/30 text-red-400 p-4 mb-6 text-sm italic">
+                {loginError}
+              </div>
+            )}
+
+            <form onSubmit={handleEmailLogin} className="space-y-6">
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-blue-100 mb-2">Correo Electrónico</label>
+                <input 
+                  type="email" 
+                  required
+                  value={loginEmail}
+                  onChange={e => setLoginEmail(e.target.value)}
+                  className="w-full bg-brand-dark/50 border border-white/10 p-3 text-white focus:border-brand-accent outline-none transition-colors"
+                  placeholder="ejemplo@correo.com"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-blue-100 mb-2">Contraseña</label>
+                <input 
+                  type="password" 
+                  required
+                  value={loginPassword}
+                  onChange={e => setLoginPassword(e.target.value)}
+                  className="w-full bg-brand-dark/50 border border-white/10 p-3 text-white focus:border-brand-accent outline-none transition-colors"
+                  placeholder="••••••••"
+                />
+              </div>
+
+              <button 
+                type="submit" 
+                disabled={isSubmitting} 
+                className="w-full flex items-center justify-center gap-2 bg-brand-accent text-brand-dark py-3 font-bold uppercase text-sm hover:bg-white hover:scale-[1.02] transition-all disabled:opacity-50"
+              >
+                {isSubmitting ? (
+                  <div className="w-5 h-5 border-2 border-brand-dark border-t-transparent rounded-full animate-spin"></div>
+                ) : (
+                  <>
+                    <LogIn size={18} />
+                    Ingresar
+                  </>
+                )}
+              </button>
+            </form>
+
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-white/10"></span></div>
+              <div className="relative flex justify-center text-xs uppercase"><span className="bg-brand-dark/95 px-2 text-white/50">O continuar con</span></div>
+            </div>
+            
+            <button 
+              type="button"
+              onClick={handleLogin} 
+              className="w-full flex items-center justify-center gap-2 border border-white/20 text-white py-3 font-bold uppercase text-sm hover:bg-white/10 transition-colors"
+            >
+              Verificar con Google
+            </button>
+          </div>
         </div>
         <Footer />
       </>

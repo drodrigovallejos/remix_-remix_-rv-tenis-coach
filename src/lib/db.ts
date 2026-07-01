@@ -14,6 +14,7 @@ import {
   GoogleAuthProvider,
   signOut,
   onAuthStateChanged,
+  signInWithEmailAndPassword,
   User
 } from 'firebase/auth';
 import { db, auth } from './firebase';
@@ -32,6 +33,7 @@ export {
   GoogleAuthProvider,
   signOut,
   onAuthStateChanged,
+  signInWithEmailAndPassword,
   db,
   auth
 };
